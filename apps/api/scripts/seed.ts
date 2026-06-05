@@ -6,7 +6,7 @@
  * email is sent — avoids the shared-SMTP rate limit). Roles live in the
  * `profiles` table (the source of truth), so the admin role is set there.
  *
- * Credentials default to the demo values below but can be overridden via env:
+ * Credentials are read from env (no hardcoded defaults — never commit secrets):
  *   SEED_ADMIN_EMAIL / SEED_ADMIN_PASSWORD / SEED_USER_EMAIL / SEED_USER_PASSWORD
  *
  * Usage: pnpm --filter @lottery/api seed
@@ -18,14 +18,13 @@ const SUPABASE_URL = process.env.SUPABASE_URL;
 const SECRET_KEY = process.env.SUPABASE_SECRET_KEY;
 const DB_URL = process.env.DIRECT_URL ?? process.env.DATABASE_URL;
 
-const admin = {
-  email: process.env.SEED_ADMIN_EMAIL ?? 'admin@lottery.test',
-  password: process.env.SEED_ADMIN_PASSWORD ?? 'Admin12345!',
-};
-const buyer = {
-  email: process.env.SEED_USER_EMAIL ?? 'user@lottery.test',
-  password: process.env.SEED_USER_PASSWORD ?? 'User12345!',
-};
+function requireEnv(name: string): string {
+  const value = process.env[name];
+  if (!value) {
+    throw new Error(`Missing ${name}. Set the SEED_* env vars before seeding.`);
+  }
+  return value;
+}
 
 function headers() {
   return {
@@ -81,6 +80,15 @@ async function main() {
     throw new Error('SUPABASE_URL, SUPABASE_SECRET_KEY and DIRECT_URL/DATABASE_URL must be set');
   }
 
+  const admin = {
+    email: requireEnv('SEED_ADMIN_EMAIL'),
+    password: requireEnv('SEED_ADMIN_PASSWORD'),
+  };
+  const buyer = {
+    email: requireEnv('SEED_USER_EMAIL'),
+    password: requireEnv('SEED_USER_PASSWORD'),
+  };
+
   console.log('Seeding demo users…');
   await ensureUser(admin.email, admin.password);
   await ensureUser(buyer.email, buyer.password);
@@ -94,9 +102,10 @@ async function main() {
     await client.end();
   }
 
-  console.log('\n✓ Seed complete. Demo credentials:');
-  console.log(`  admin → ${admin.email} / ${admin.password}`);
-  console.log(`  buyer → ${buyer.email} / ${buyer.password}`);
+  // Don't echo passwords — the operator already set them via env.
+  console.log('\n✓ Seed complete:');
+  console.log(`  admin → ${admin.email}`);
+  console.log(`  buyer → ${buyer.email}`);
 }
 
 main().catch((err) => {

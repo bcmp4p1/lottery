@@ -113,15 +113,16 @@ pnpm dev                                  # runs web (:3000) and api (:3001)
 
 ### Demo accounts
 
-The seed creates two ready-to-use, email-confirmed accounts:
+`seed` creates one admin and one buyer (email pre-confirmed) from **env vars** —
+no credentials are hardcoded in the repo. Set them in `apps/api/.env` first:
 
-| Role  | Email                | Password      |
-| ----- | -------------------- | ------------- |
-| Admin | `admin@lottery.test` | `Admin12345!` |
-| Buyer | `user@lottery.test`  | `User12345!`  |
+```bash
+SEED_ADMIN_EMAIL=...   SEED_ADMIN_PASSWORD=...
+SEED_USER_EMAIL=...    SEED_USER_PASSWORD=...
+```
 
-Override the defaults with `SEED_ADMIN_EMAIL` / `SEED_ADMIN_PASSWORD` /
-`SEED_USER_EMAIL` / `SEED_USER_PASSWORD` env vars.
+> Demo login for the deployed app is provided with the submission (not committed).
+> Locally, use whatever you set above, or sign up and self-promote (below).
 
 ### Creating other admins
 
