@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+/*
+ * Tailwind v4 dark mode — "class" strategy.
+ * By default the `dark:` variant follows the OS (prefers-color-scheme). This line
+ * overrides it so `dark:` activates only when <html> (or an ancestor) has the
+ * `dark` class — which lets us drive the theme with a manual toggle.
+ */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Expose the Geist fonts (set as CSS vars on <html>) to Tailwind's font utilities. */
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* color-scheme makes native UI (date picker, scrollbars, form controls) match the theme. */
+:root {
+  color-scheme: light;
+}
+:root.dark {
+  color-scheme: dark;
+}
+
+body {
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}

@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build output
+dist/
+build/
+.next/
+out/
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+secrets.txt
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+
+# Claude Code local (machine-specific) settings
+.claude/settings.local.json
+
+# Test / coverage
+coverage/
+
+# Turbo/Next cache (in case)
+.turbo/
+.vercel/
